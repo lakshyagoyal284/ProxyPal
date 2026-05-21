@@ -34,8 +34,8 @@ const CLIENT_CHAT_REPLIES = [
   "Perfect, thanks for taking this on!"
 ];
 
-function initActiveTask() {
-  const task = getWorkerActiveTask();
+async function initActiveTask() {
+  const task = await getWorkerActiveTask();
 
   if (!task) {
     showToast("No active task found.", "error");
@@ -289,7 +289,7 @@ function initProgressTracker(task) {
 
 function updateProgress(task) {
   try {
-    var check = canCompleteTask(task.id);
+    var check = canCompleteTaskLocal(task);
 
     if (check.allowed) {
       // 60% time has passed
@@ -330,7 +330,7 @@ function initCompleteButton(task) {
 
   function updateCompleteState() {
     try {
-      var check = canCompleteTask(task.id);
+      var check = canCompleteTaskLocal(task);
 
       if (check.allowed) {
         $btn
@@ -372,13 +372,13 @@ function initCompleteButton(task) {
   completeBtnInterval = setInterval(updateCompleteState, 2000);
 
   // Complete button click
-  $btn.off("click").on("click", function () {
+  $btn.off("click").on("click", async function () {
     if ($(this).prop("disabled")) return;
 
     // Confirm
     if (!confirm("Are you sure you want to mark this task as complete?")) return;
 
-    const result = completeAcceptedTask(task.id);
+    const result = await completeAcceptedTask(task.id);
 
     if (result && !result.error) {
       showToast("Task completed successfully! 🎉");
@@ -433,9 +433,9 @@ function initExitWarning() {
   });
 
   // Override the confirmation dialog for page unload
+  var hasLock = getActiveProxyPal() !== null;
   window.addEventListener("beforeunload", function (e) {
-    // Only if there's still an active task
-    if (hasActiveTaskLock()) {
+    if (hasLock) {
       e.preventDefault();
       e.returnValue = "You are currently on an active task. Are you sure you want to leave?";
     }

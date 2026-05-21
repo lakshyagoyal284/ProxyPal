@@ -4,8 +4,8 @@
 
 $(document).ready(function () {
   showDashboardSkeletons();
-  setTimeout(function () {
-    renderDashboard();
+  setTimeout(async function () {
+    await renderDashboard();
   }, 600);
 });
 
@@ -19,9 +19,9 @@ function showDashboardSkeletons() {
   $("#activeTasksList, #completedTasksList").html(skeleton);
 }
 
-function renderDashboard() {
+async function renderDashboard() {
   const user = getCurrentUser();
-  const tasks = getTasks();
+  const tasks = await getTasks();
 
   if (user) {
     $("#profileName").text(user.name);

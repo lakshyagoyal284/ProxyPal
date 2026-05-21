@@ -3,7 +3,7 @@
  * Navbar, footer, theme, modals, animations, live notifications
  */
 
-$(document).ready(function () {
+$(document).ready(async function () {
   initSampleData();
   initTheme();
   renderNavbar();
@@ -16,7 +16,7 @@ $(document).ready(function () {
   hidePageLoader();
   highlightActiveNav();
   initGlobalSearch();
-  initTaskLockGuard();
+  await initTaskLockGuard();
 });
 
 /** Page loading spinner */
@@ -79,7 +79,11 @@ function renderNavbar() {
             </li>
             <li class="nav-item"><a class="nav-link ${currentPage === "tasks" ? "active" : ""}" href="tasks.html" title="Browse posted tasks">Task Board</a></li>
             <li class="nav-item"><a class="nav-link ${currentPage === "dashboard" ? "active" : ""}" href="dashboard.html">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link ${currentPage === "admin" ? "active" : ""}" href="admin.html">Admin</a></li>
+            ${
+              user
+                ? `<li class="nav-item"><a class="nav-link ${currentPage === "admin" ? "active" : ""}" href="admin.html">Admin</a></li>`
+                : ""
+            }
             <li class="nav-item"><a class="nav-link ${currentPage === "contact" ? "active" : ""}" href="contact.html">Contact</a></li>
           </ul>
           <div class="navbar-actions">
@@ -92,10 +96,25 @@ function renderNavbar() {
             </button>
             ${
               user
-                ? `<span class="navbar-user-greeting d-none d-xxl-inline">Hi, ${escapeHtml(user.name)}</span>`
-                : ""
+                ? `
+              <div class="dropdown navbar-user-dropdown">
+                <button class="btn btn-outline-glass btn-sm dropdown-toggle navbar-user-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-solid fa-user me-1"></i>
+                  <span class="navbar-user-greeting">${escapeHtml(user.name)}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end glass-dropdown">
+                  <li><h6 class="dropdown-header"><i class="fa-solid fa-id-card me-2"></i>${escapeHtml(user.email)}</h6></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item ${currentPage === "dashboard" ? "active" : ""}" href="dashboard.html"><i class="fa-solid fa-gauge-high me-2"></i>Dashboard</a></li>
+                  <li><a class="dropdown-item" href="dashboard.html"><i class="fa-solid fa-user-pen me-2"></i>Profile</a></li>
+                  <li><a class="dropdown-item" href="contact.html"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
+                  <li><a class="dropdown-item ${currentPage === "admin" ? "active" : ""}" href="admin.html"><i class="fa-solid fa-shield-halved me-2"></i>Admin Panel</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="#" id="navbarLogoutBtn"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
+                </ul>
+              </div>`
+                : `<button type="button" class="btn btn-outline-glass btn-sm navbar-btn-login" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>`
             }
-            <button type="button" class="btn btn-outline-glass btn-sm navbar-btn-login" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
             <a href="hire.html" class="btn btn-gradient btn-sm navbar-btn-cta">Hire Now</a>
           </div>
         </div>
@@ -154,7 +173,7 @@ function renderFooter() {
           </div>
         </div>
         <hr class="my-4 border-secondary">
-        <p class="text-center small mb-0">&copy; ${year} ProxyPal. Demo MVP — Frontend only.</p>
+        <p class="text-center small mb-0">&copy; ${year} ProxyPal. Demo MVP — Backend-ready with Express + PostgreSQL.</p>
       </div>
     </footer>
   `.replace(/<\/?motion>/g, ""));
@@ -201,7 +220,7 @@ function initScrollReveal() {
 
 /** Login / Register modals (delegated — modals injected by components.js) */
 function initAuthModals() {
-  $(document).on("submit", "#loginForm", function (e) {
+  $(document).on("submit", "#loginForm", async function (e) {
     e.preventDefault();
     const email = $("#loginEmail").val().trim();
     const password = $("#loginPassword").val();
@@ -209,14 +228,14 @@ function initAuthModals() {
       showToast("Enter a valid email.", "error");
       return;
     }
-    loginUser(email, password);
+    await loginUser(email, password);
     const loginModal = document.getElementById("loginModal");
     if (loginModal) bootstrap.Modal.getInstance(loginModal).hide();
     showToast("Welcome back!");
     renderNavbar();
   });
 
-  $(document).on("submit", "#registerForm", function (e) {
+  $(document).on("submit", "#registerForm", async function (e) {
     e.preventDefault();
     const name = $("#registerName").val().trim();
     const email = $("#registerEmail").val().trim();
@@ -225,10 +244,16 @@ function initAuthModals() {
       showToast("Fill all fields. Password min 4 chars.", "error");
       return;
     }
-    registerUser(name, email, password);
+    await registerUser(name, email, password);
     const registerModal = document.getElementById("registerModal");
     if (registerModal) bootstrap.Modal.getInstance(registerModal).hide();
     showToast("Account created! Welcome to ProxyPal.");
+    renderNavbar();
+  });
+
+  $(document).on("click", "#navbarLogoutBtn", function () {
+    logoutUser();
+    showToast("Logged out successfully.");
     renderNavbar();
   });
 }
@@ -341,31 +366,40 @@ function highlightActiveNav() {
  * Navigation Guard — prevents workers with active tasks from leaving to other pages
  * This runs on every page except the active-task page itself.
  */
-function initTaskLockGuard() {
-  const currentPage = $("body").data("page") || "";
-  // Don't guard on the active-task page itself
-  if (currentPage === "active-task") return;
+async function initTaskLockGuard() {
+  try {
+    const currentPage = $("body").data("page") || "";
+    // Don't guard on the active-task page itself
+    if (currentPage === "active-task") return;
 
-  // If worker has an active task, redirect to active-task.html
-  if (hasActiveTaskLock()) {
-    showToast("You have an active task! Redirecting...", "info");
-    setTimeout(function () {
-      window.location.href = "active-task.html";
-    }, 500);
-    return;
-  }
-
-  // Also override navbar links to prevent navigation if worker has active task
-  $(document).on("click", ".nav-link, .navbar-brand", function (e) {
-    if (hasActiveTaskLock()) {
-      e.preventDefault();
-      e.stopPropagation();
-      showToast("Complete your active task first!", "error");
+    // If worker has an active task, redirect to active-task.html
+    const hasLock = await hasActiveTaskLock();
+    if (hasLock) {
+      showToast("You have an active task! Redirecting...", "info");
       setTimeout(function () {
         window.location.href = "active-task.html";
       }, 500);
+      return;
     }
-  });
+
+    // Also override navbar links to prevent navigation if worker has active task
+    $(document).on("click", ".nav-link, .navbar-brand", async function (e) {
+      try {
+        if (await hasActiveTaskLock()) {
+          e.preventDefault();
+          e.stopPropagation();
+          showToast("Complete your active task first!", "error");
+          setTimeout(function () {
+            window.location.href = "active-task.html";
+          }, 500);
+        }
+      } catch (e) {
+        // ignore
+      }
+    });
+  } catch (e) {
+    // ignore
+  }
 }
 
 /** Location autocomplete datalist helper */

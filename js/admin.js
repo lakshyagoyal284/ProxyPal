@@ -2,15 +2,15 @@
  * ProxyPal - Admin Panel Logic
  */
 
-$(document).ready(function () {
-  renderAdminTables();
+$(document).ready(async function () {
+  await renderAdminTables();
   initAdminFilters();
   initAdminTabs();
 });
 
 function initAdminTabs() {
-  $('button[data-bs-toggle="tab"]').on("shown.bs.tab", function () {
-    renderAdminTables();
+  $('button[data-bs-toggle="tab"]').on("shown.bs.tab", async function () {
+    await renderAdminTables();
   });
 }
 
@@ -32,13 +32,13 @@ function initAdminFilters() {
   }
 }
 
-function renderAdminTables() {
-  renderTasksTable($("#filterStatus").val() || "all");
-  renderProxyPalsTable();
+async function renderAdminTables() {
+  await renderTasksTable($("#filterStatus").val() || "all");
+  await renderProxyPalsTable();
 }
 
-function renderTasksTable(statusFilter) {
-  let tasks = getTasks();
+async function renderTasksTable(statusFilter) {
+  let tasks = await getTasks();
   if (statusFilter && statusFilter !== "all") {
     tasks = tasks.filter((t) => t.status === statusFilter);
   }
@@ -71,18 +71,18 @@ function renderTasksTable(statusFilter) {
   });
   $tbody.html(html);
 
-  $(".delete-task").on("click", function () {
+  $(".delete-task").on("click", async function () {
     const id = $(this).data("id");
     if (confirm("Delete this task request?")) {
-      deleteTask(id);
+      await deleteTask(id);
       showToast("Task deleted.");
-      renderAdminTables();
+      await renderAdminTables();
     }
   });
 }
 
-function renderProxyPalsTable() {
-  const workers = getProxyPals();
+async function renderProxyPalsTable() {
+  const workers = await getProxyPals();
   const $tbody = $("#proxypalsTableBody");
 
   if (!workers.length) {
@@ -111,12 +111,12 @@ function renderProxyPalsTable() {
   });
   $tbody.html(html);
 
-  $(".delete-worker").on("click", function () {
+  $(".delete-worker").on("click", async function () {
     const id = $(this).data("id");
     if (confirm("Remove this ProxyPal?")) {
-      deleteProxyPal(id);
+      await deleteProxyPal(id);
       showToast("ProxyPal removed.");
-      renderProxyPalsTable();
+      await renderProxyPalsTable();
     }
   });
 }

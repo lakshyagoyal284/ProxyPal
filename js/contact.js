@@ -8,7 +8,7 @@ $(document).ready(function () {
 });
 
 function initContactForm() {
-  $("#contactForm").on("submit", function (e) {
+  $("#contactForm").on("submit", async function (e) {
     e.preventDefault();
     ProxyPalValidator.clearForm("#contactForm");
 
@@ -23,7 +23,7 @@ function initContactForm() {
       return;
     }
 
-    saveContact({
+    await saveContact({
       name: $("#contactName").val().trim(),
       email: $("#contactEmail").val().trim(),
       subject: $("#contactSubject").val().trim(),

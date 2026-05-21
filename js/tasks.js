@@ -2,9 +2,9 @@
  * ProxyPal - Task Board (for registered ProxyPals)
  */
 
-$(document).ready(function () {
+$(document).ready(async function () {
   populateTaskTypeFilter();
-  initTaskBoard();
+  await initTaskBoard();
   bindTaskBoardEvents();
   showWelcomeIfNeeded();
 });
@@ -20,7 +20,7 @@ function showWelcomeIfNeeded() {
   }
 }
 
-function initTaskBoard() {
+async function initTaskBoard() {
   const worker = getActiveProxyPal();
   if (worker) {
     $("#workerProfileStrip").removeClass("d-none");
@@ -32,14 +32,16 @@ function initTaskBoard() {
       "https://i.pravatar.cc/150?u=" + encodeURIComponent(worker.name)
     );
     $("#registerLinkBtn").addClass("d-none");
-    updateMyAcceptedCount(worker);
+    await updateMyAcceptedCount(worker);
   }
-  renderTaskBoard();
+  await renderTaskBoard();
 }
 
-function updateMyAcceptedCount(worker) {
-  const mine = getTasks().filter(function (t) {
-    return t.assignedTo === worker.id && t.status === "active";
+async function updateMyAcceptedCount(worker) {
+  const tasks = await getTasks();
+  const mine = tasks.filter(function (t) {
+    const assigned = t.assigned_to || t.assignedTo;
+    return assigned === worker.id && t.status === "active";
   });
   $("#myAcceptedCount").text(mine.length + " accepted");
 }
@@ -52,22 +54,26 @@ function populateTaskTypeFilter() {
 }
 
 function bindTaskBoardEvents() {
-  $("#taskStatusFilter, #taskTypeFilter").on("change", renderTaskBoard);
-  $("#taskBoardSearch").on("keyup", renderTaskBoard);
-  $("#refreshTasksBtn").on("click", function () {
-    renderTaskBoard();
+  $("#taskStatusFilter, #taskTypeFilter").on("change", async function () {
+    await renderTaskBoard();
+  });
+  $("#taskBoardSearch").on("keyup", async function () {
+    await renderTaskBoard();
+  });
+  $("#refreshTasksBtn").on("click", async function () {
+    await renderTaskBoard();
     showToast("Task list refreshed.", "info");
   });
 
-  $(document).on("click", ".btn-accept-task", function () {
-    handleAcceptTask($(this).data("id"));
+  $(document).on("click", ".btn-accept-task", async function () {
+    await handleAcceptTask($(this).data("id"));
   });
 
-  $(document).on("click", ".btn-complete-task", function () {
-    const result = completeAcceptedTask($(this).data("id"));
+  $(document).on("click", ".btn-complete-task", async function () {
+    const result = await completeAcceptedTask($(this).data("id"));
     if (result && !result.error) {
       showToast("Task marked as completed!");
-      initTaskBoard();
+      await initTaskBoard();
     } else if (result && result.error) {
       showToast(result.error, "error");
     } else {
@@ -80,7 +86,7 @@ function bindTaskBoardEvents() {
   });
 }
 
-function handleAcceptTask(taskId) {
+async function handleAcceptTask(taskId) {
   const worker = getActiveProxyPal();
   if (!worker) {
     showToast("Register as a ProxyPal first.", "error");
@@ -90,14 +96,14 @@ function handleAcceptTask(taskId) {
     return;
   }
 
-  const result = acceptTask(taskId);
+  const result = await acceptTask(taskId);
   if (!result.ok) {
     if (result.error === "unavailable") {
       showToast("This task was just taken by another ProxyPal.", "error");
     } else {
       showToast("Could not accept task.", "error");
     }
-    renderTaskBoard();
+    await renderTaskBoard();
     return;
   }
 
@@ -107,11 +113,11 @@ function handleAcceptTask(taskId) {
   }, 1200);
 }
 
-function getFilteredTasks() {
+async function getFilteredTasks() {
   const status = $("#taskStatusFilter").val() || "pending";
   const type = $("#taskTypeFilter").val() || "all";
   const q = ($("#taskBoardSearch").val() || "").trim().toLowerCase();
-  let tasks = getTasks();
+  let tasks = await getTasks();
 
   if (status !== "all") {
     tasks = tasks.filter(function (t) {
@@ -143,9 +149,9 @@ function getFilteredTasks() {
   return tasks;
 }
 
-function renderTaskBoard() {
-  const tasks = getFilteredTasks();
-  const all = getTasks();
+async function renderTaskBoard() {
+  const tasks = await getFilteredTasks();
+  const all = await getTasks();
   const worker = getActiveProxyPal();
 
   $("#statPending").text(
@@ -254,8 +260,9 @@ function buildTaskCard(task, worker) {
   );
 }
 
-function openTaskDetail(taskId) {
-  const task = getTasks().find(function (t) {
+async function openTaskDetail(taskId) {
+  const tasks = await getTasks();
+  const task = tasks.find(function (t) {
     return t.id === taskId;
   });
   if (!task) return;

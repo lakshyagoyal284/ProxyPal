@@ -9,7 +9,7 @@ $(document).ready(function () {
 });
 
 function initBecomeForm() {
-  $("#becomeForm").on("submit", function (e) {
+  $("#becomeForm").on("submit", async function (e) {
     e.preventDefault();
     ProxyPalValidator.clearForm("#becomeForm");
 
@@ -46,7 +46,7 @@ function initBecomeForm() {
       idProofUploaded: $("#idProof")[0].files.length > 0
     };
 
-    const saved = saveProxyPal(worker);
+    const saved = await saveProxyPal(worker);
     setActiveProxyPal(saved);
 
     $("#becomeForm")[0].reset();

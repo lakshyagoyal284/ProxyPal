@@ -20,7 +20,7 @@ function populateTaskTypes() {
 
 /** Hire form submit with validation */
 function initHireForm() {
-  $("#hireForm").on("submit", function (e) {
+  $("#hireForm").on("submit", async function (e) {
     e.preventDefault();
     ProxyPalValidator.clearForm("#hireForm");
 
@@ -53,7 +53,7 @@ function initHireForm() {
     }
 
     const file = $("#referenceImage")[0].files[0];
-    readFileAsDataURL(file, function (imageRef) {
+    readFileAsDataURL(file, async function (imageRef) {
       const task = {
         fullName: fields.fullName.val().trim(),
         phone: fields.phone.val().trim(),
@@ -68,7 +68,7 @@ function initHireForm() {
         status: "pending"
       };
 
-      saveTask(task);
+      await saveTask(task);
       $("#hireForm")[0].reset();
       const modal = new bootstrap.Modal(document.getElementById("successModal"));
       modal.show();
