@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Active Task Workspace - ProxyPal task execution page with chat, map, and progress tracking.">
+  <title>Active Task | ProxyPal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      padding-top: 0;
+    }
+    #pageLoader {
+      z-index: 9999;
+    }
+    .task-workspace-header {
+      background: var(--gradient-soft);
+      padding: 1.25rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .task-workspace-header .workspace-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .workspace-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      font-size: 0.875rem;
+    }
+    .workspace-timer .countdown-number {
+      font-weight: 700;
+      color: var(--accent-light);
+      font-variant-numeric: tabular-nums;
+    }
+    .workspace-timer.ready .countdown-number {
+      color: #10b981;
+    }
+    .progress-60-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--glass-border);
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .progress-60-bar .progress-60-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--gradient);
+      transition: width 1s linear;
+    }
+    .progress-60-bar .progress-60-fill.complete-ready {
+      background: #10b981;
+    }
+    .task-workspace-main {
+      padding: 2rem 0 4rem;
+    }
+    .client-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .client-card .client-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-light);
+    }
+    .phone-number-display {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-light);
+      letter-spacing: 1px;
+    }
+    .phone-number-display i {
+      margin-right: 0.5rem;
+      color: #10b981;
+    }
+    .copy-phone-btn {
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .copy-phone-btn:hover {
+      color: var(--accent-light);
+    }
+    .task-info-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .task-info-card .info-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .task-info-card .info-value {
+      font-weight: 600;
+    }
+    .map-container {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      margin-bottom: 1rem;
+      height: 280px;
+    }
+    .map-container #taskMap {
+      width: 100%;
+      height: 100%;
+    }
+    .map-legend {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      padding: 0.5rem 0;
+    }
+    .map-legend .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .map-legend .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .legend-dot.task-loc { background: #6366f1; }
+    .legend-dot.client-loc { background: #10b981; }
+    .task-chat-widget {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 420px;
+    }
+    .task-chat-widget .chat-header {
+      background: var(--gradient);
+      color: #fff;
+      padding: 0.9rem 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .task-chat-widget .chat-header .chat-client-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.4);
+    }
+    .task-chat-widget .chat-messages-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background: rgba(0,0,0,0.15);
+    }
+    .task-chat-widget .chat-msg {
+      padding: 0.6rem 0.85rem;
+      border-radius: 14px;
+      margin-bottom: 0.65rem;
+      max-width: 85%;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+    .task-chat-widget .chat-msg.client {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
+    .task-chat-widget .chat-msg.worker {
+      background: var(--accent);
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .task-chat-widget .chat-msg .msg-time {
+      font-size: 0.65rem;
+      opacity: 0.6;
+      display: block;
+      margin-top: 0.25rem;
+    }
+    .task-chat-widget .chat-input-area {
+      display: flex;
+      padding: 0.75rem;
+      gap: 0.5rem;
+      border-top: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.2);
+    }
+    .task-chat-widget .chat-input-area input {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: 50px;
+    }
+    .task-chat-widget .chat-input-area input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+    .complete-task-section {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .complete-task-section .lock-icon {
+      font-size: 2rem;
+      color: var(--text-secondary);
+      opacity: 0.5;
+      margin-bottom: 0.5rem;
+    }
+    .complete-task-section .lock-icon.unlocked {
+      color: #10b981;
+      opacity: 1;
+    }
+    .btn-complete-ready {
+      background: #10b981;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      transition: all var(--transition);
+    }
+    .btn-complete-ready:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+      color: #fff;
+    }
+    .btn-complete-disabled {
+      background: var(--glass-border);
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .exit-warning-banner {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #f87171;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .exit-warning-banner i {
+      margin-right: 0.5rem;
+    }
+    .status-badge-lg {
+      font-size: 0.85rem;
+      padding: 0.35rem 1rem;
+      border-radius: 50px;
+    }
+    @media (max-width: 768px) {
+      .task-workspace-header .workspace-title {
+        font-size: 0.95rem;
+      }
+      .workspace-timer {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.75rem;
+      }
+      .task-chat-widget {
+        height: 350px;
+      }
+      .phone-number-display {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body data-page="active-task" class="active-task-body">
+
+  <div class="loading-overlay" id="pageLoader">
+    <div class="text-center">
+      <div class="spinner-border text-light mb-3" role="status"></div>
+      <p class="text-white">Loading your task workspace...</p>
+    </div>
+  </div>
+
+  <!-- Workspace Header -->
+  <header class="task-workspace-header">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-3">
+          <div class="workspace-title">
+            <i class="fa-solid fa-briefcase text-accent me-2"></i>
+            <span id="taskTitle">Active Task</span>
+          </div>
+          <span class="status-badge-lg badge badge-active" id="taskStatusBadge">In Progress</span>
+        </div>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <div class="workspace-timer" id="workspaceTimer">
+            <i class="fa-solid fa-hourglass-half"></i>
+            <span>60% in: </span>
+            <span class="countdown-number" id="countdownDisplay">--:--</span>
+          </div>
+          <button class="btn btn-outline-glass btn-sm" id="exitWarningBtn" title="You cannot leave while on a task" disabled>
+            <i class="fa-solid fa-lock me-1"></i> Locked
+          </button>
+        </div>
+      </div>
+      <!-- Progress bar -->
+      <div class="progress-60-bar" id="progressBarContainer">
+        <div class="progress-60-fill" id="progress60Fill" style="width: 0%;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Exit warning -->
+  <div class="container mt-3">
+    <div class="exit-warning-banner" id="exitWarningBanner">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      You are currently on an active task. You cannot navigate away until the task is completed.
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="task-workspace-main">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Left column: Client info + Task details + Map -->
+        <div class="col-lg-7">
+          <!-- Client Card -->
+          <div class="client-card" id="clientCard">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <img src="" alt="Client" class="client-avatar" id="clientAvatar">
+              <div>
+                <h5 class="mb-0" id="clientName">—</h5>
+                <small class="text-secondary">Task Client</small>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <div class="phone-number-display" id="clientPhone">—</div>
+              <button class="btn btn-sm btn-outline-glass copy-phone-btn" id="copyPhoneBtn" title="Copy phone number">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+            <p class="small text-secondary mt-2 mb-0">
+              <i class="fa-regular fa-circle-check me-1 text-success"></i>
+              Contact the client directly for coordination
+            </p>
+          </div>
+
+          <!-- Task Details Card -->
+          <div class="task-info-card" id="taskInfoCard">
+            <h6 class="mb-3"><i class="fa-solid fa-clipboard-list me-2"></i>Task Details</h6>
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="info-label">Task Type</div>
+                <div class="info-value" id="taskType">—</div>
+              </div>
+              <div class="col-6">
+                <div class="info-label">Budget</div>
+                <div class="info-value" id="taskBudget">—</div>
+              </div>
+              <div class="col-6">
+                <div class="info-label">Duration</div>
+                <div class="info-value" id="taskDuration">—</div>
+              </div>
+              <div class="col-6">
+                <div class="info-label">Scheduled</div>
+                <div class="info-value" id="taskDateTime">—</div>
+              </div>
+              <div class="col-12">
+                <div class="info-label">Task Location</div>
+                <div class="info-value" id="taskLocation">—</div>
+              </div>
+              <div class="col-12">
+                <div class="info-label">Client Location</div>
+                <div class="info-value" id="clientLocation">—</div>
+              </div>
+              <div class="col-12">
+                <div class="info-label">Description</div>
+                <div class="info-value text-secondary" id="taskDescription" style="font-weight: normal;">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Map -->
+          <div>
+            <div class="map-legend">
+              <span class="legend-item"><span class="legend-dot task-loc"></span> Task Location</span>
+              <span class="legend-item"><span class="legend-dot client-loc"></span> Client Location</span>
+            </div>
+            <div class="map-container">
+              <div id="taskMap"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column: Chat + Complete -->
+        <div class="col-lg-5">
+          <!-- Task Chat -->
+          <div class="task-chat-widget" id="taskChatWidget">
+            <div class="chat-header">
+              <img src="" alt="" class="chat-client-avatar" id="chatClientAvatar">
+              <span id="chatClientName">Client</span>
+              <small class="ms-auto opacity-75" id="chatOnlineStatus"><i class="fa-solid fa-circle text-success me-1" style="font-size: 0.5rem;"></i>Online</small>
+            </div>
+            <div class="chat-messages-area" id="taskChatMessages">
+              <!-- Messages injected by JS -->
+            </div>
+            <div class="chat-input-area">
+              <input type="text" class="form-control form-control-sm" id="taskChatInput" placeholder="Type a message to the client...">
+              <button class="btn btn-gradient btn-sm" id="taskChatSend"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+          </div>
+
+          <!-- Complete Task Section -->
+          <div class="complete-task-section text-center" id="completeTaskSection">
+            <div class="lock-icon" id="completeLockIcon">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <h6 id="completeStatusText">Task in progress</h6>
+            <p class="small text-secondary mb-3" id="completeSubText">You can complete the task after 60% of the allocated time has passed.</p>
+            <div id="completeTimeInfo" class="small text-secondary mb-3"></div>
+            <button class="btn-complete-disabled w-100" id="completeTaskBtn" disabled>
+              <i class="fa-solid fa-spinner fa-spin me-2"></i>Waiting for time threshold...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Hidden container for shared components (toast) -->
+  <div id="shared-components"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/active-task.js"></script>
+</body>
+</html>

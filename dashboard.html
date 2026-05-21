@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ProxyPal Dashboard - Manage active tasks, earnings, and your profile.">
+  <title>Dashboard | ProxyPal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="dashboard">
+
+  <div class="loading-overlay" id="pageLoader">
+    <div class="text-center">
+      <div class="spinner-border text-light mb-3" role="status"></div>
+      <p class="text-white">Loading dashboard...</p>
+    </div>
+  </div>
+
+  <div id="navbar-container"></div>
+
+  <header class="page-header">
+    <div class="container">
+      <h1 class="display-6 fw-bold">My <span class="text-gradient">Dashboard</span></h1>
+    </div>
+  </header>
+
+  <main class="form-page pt-0">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Sidebar profile -->
+        <div class="col-lg-3">
+          <div class="glass-card p-4 text-center dashboard-sidebar reveal">
+            <img src="https://i.pravatar.cc/150?u=default" alt="Profile" class="profile-avatar mb-3" id="profileAvatar">
+            <h5 id="profileName">Demo User</h5>
+            <p class="text-secondary small" id="profileEmail">demo@proxypal.in</p>
+            <hr>
+            <div class="text-start small">
+              <p class="mb-1"><i class="fa-solid fa-list me-2"></i>Total tasks: <strong id="totalTasksCount">0</strong></p>
+              <p class="mb-0"><i class="fa-solid fa-bolt me-2"></i>Active: <strong id="activeCount">0</strong></p>
+            </div>
+            <a href="hire.html" class="btn btn-gradient btn-sm w-100 mt-3">New Task</a>
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-lg-9">
+          <!-- Stats row -->
+          <div class="row g-3 mb-4 reveal">
+            <div class="col-md-4">
+              <div class="glass-card p-4 text-center">
+                <i class="fa-solid fa-wallet text-success fs-3 mb-2"></i>
+                <p class="text-secondary small mb-1">Total Earnings</p>
+                <p class="earnings-display mb-0" id="earningsAmount">₹0</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="glass-card p-4 text-center">
+                <i class="fa-solid fa-spinner text-primary fs-3 mb-2"></i>
+                <p class="text-secondary small mb-1">Active Tasks</p>
+                <p class="fs-2 fw-bold mb-0" id="activeCountCard">0</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="glass-card p-4 text-center">
+                <i class="fa-solid fa-circle-check text-info fs-3 mb-2"></i>
+                <p class="text-secondary small mb-1">Completed</p>
+                <p class="fs-2 fw-bold mb-0" id="completedCount">0</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress tracker -->
+          <div class="glass-card p-4 mb-4 reveal">
+            <h5 class="mb-3">Current Task Progress</h5>
+            <div class="progress-tracker">
+              <div class="progress-step active"><div class="step-dot">1</div><small>Posted</small></div>
+              <div class="progress-step"><div class="step-dot">2</div><small>Assigned</small></div>
+              <div class="progress-step"><div class="step-dot">3</div><small>In Progress</small></div>
+              <div class="progress-step"><div class="step-dot">4</div><small>Completed</small></div>
+            </div>
+          </div>
+
+          <!-- Active tasks -->
+          <h5 class="mb-3 reveal"><i class="fa-solid fa-clipboard-list me-2"></i>Active Tasks</h5>
+          <div id="activeTasksList" class="mb-4"></div>
+
+          <!-- Completed tasks -->
+          <h5 class="mb-3 reveal"><i class="fa-solid fa-check-double me-2"></i>Completed Tasks</h5>
+          <div id="completedTasksList"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+  <div id="shared-components"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

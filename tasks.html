@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse and accept posted tasks as a ProxyPal. Earn by completing local waiting tasks near you.">
+  <title>Task Board | ProxyPal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="tasks">
+
+  <div class="loading-overlay" id="pageLoader">
+    <div class="text-center">
+      <div class="spinner-border text-light mb-3" role="status"></div>
+      <p class="text-white">Loading tasks...</p>
+    </div>
+  </div>
+
+  <div id="navbar-container"></div>
+  <div id="liveNotificationArea"></div>
+
+  <header class="page-header">
+    <div class="container">
+      <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+          <h1 class="display-6 fw-bold mb-2">ProxyPal <span class="text-gradient">Task Board</span></h1>
+          <p class="text-secondary mb-0">Browse tasks posted by clients and accept the ones that match your skills and city.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="become.html" class="btn btn-outline-glass btn-sm" id="registerLinkBtn">
+            <i class="fa-solid fa-user-plus me-1"></i> Register as ProxyPal
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="form-page pt-0">
+    <div class="container">
+      <!-- Welcome banner (shown after registration redirect) -->
+      <div id="welcomeBanner" class="alert alert-success glass-card border-0 mb-4 d-none reveal" role="alert">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <i class="fa-solid fa-circle-check fs-3 text-success"></i>
+          <div class="flex-grow-1">
+            <strong>Welcome aboard, <span id="welcomeWorkerName">ProxyPal</span>!</strong>
+            <p class="mb-0 small text-secondary">You're registered. Pick a task below and tap Accept to get started.</p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+
+      <!-- Worker profile strip -->
+      <div id="workerProfileStrip" class="glass-card p-3 mb-4 d-none reveal">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <img src="" alt="" class="profile-avatar" style="width:52px;height:52px;" id="workerStripAvatar">
+          <div class="flex-grow-1">
+            <h6 class="mb-0" id="workerStripName">—</h6>
+            <small class="text-secondary"><i class="fa-solid fa-location-dot me-1"></i><span id="workerStripCity">—</span> · ₹<span id="workerStripRate">—</span>/hr</small>
+          </div>
+          <div class="text-end">
+            <span class="badge bg-primary" id="myAcceptedCount">0 accepted</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="glass-card p-3 mb-4 reveal">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label for="taskBoardSearch" class="form-label small">Search</label>
+            <input type="search" class="form-control" id="taskBoardSearch" placeholder="Location, type, client...">
+          </div>
+          <div class="col-md-3">
+            <label for="taskStatusFilter" class="form-label small">Status</label>
+            <select class="form-select" id="taskStatusFilter">
+              <option value="all">All tasks</option>
+              <option value="pending" selected>Available (Pending)</option>
+              <option value="active">Active / In progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="taskTypeFilter" class="form-label small">Task type</label>
+            <select class="form-select" id="taskTypeFilter">
+              <option value="all">All types</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-outline-glass w-100" id="refreshTasksBtn">
+              <i class="fa-solid fa-rotate me-1"></i> Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="row g-3 mb-4 reveal">
+        <div class="col-4">
+          <div class="glass-card p-3 text-center">
+            <div class="stat-number fs-4" id="statPending">0</div>
+            <small class="text-secondary">Available</small>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="glass-card p-3 text-center">
+            <div class="stat-number fs-4" id="statActive">0</div>
+            <small class="text-secondary">In progress</small>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="glass-card p-3 text-center">
+            <div class="stat-number fs-4" id="statCompleted">0</div>
+            <small class="text-secondary">Completed</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task list -->
+      <div id="taskBoardList" class="row g-4"></div>
+    </div>
+  </main>
+
+  <!-- Task detail modal -->
+  <div class="modal fade" id="taskDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="taskDetailTitle">Task details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="taskDetailBody"></div>
+        <div class="modal-footer" id="taskDetailFooter"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+  <div id="shared-components"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/tasks.js"></script>
+</body>
+</html>

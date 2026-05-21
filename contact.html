@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact ProxyPal - Get support, read FAQs, and find our office location.">
+  <title>Contact Us | ProxyPal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contact">
+
+  <div class="loading-overlay" id="pageLoader">
+    <div class="text-center">
+      <div class="spinner-border text-light mb-3" role="status"></div>
+      <p class="text-white">Loading...</p>
+    </div>
+  </div>
+
+  <div id="navbar-container"></div>
+  <div id="liveNotificationArea"></div>
+
+  <header class="page-header">
+    <div class="container text-center">
+      <h1 class="display-5 fw-bold">Contact <span class="text-gradient">ProxyPal</span></h1>
+      <p class="text-secondary">We're here to help — reach out anytime</p>
+    </div>
+  </header>
+
+  <main class="form-page">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Contact form -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 reveal">
+            <h4 class="mb-4"><i class="fa-solid fa-envelope me-2"></i>Send a Message</h4>
+            <form id="contactForm" novalidate>
+              <div class="mb-3">
+                <label for="contactName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="contactName" required>
+              </div>
+              <div class="mb-3">
+                <label for="contactEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="contactEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="contactSubject" class="form-label">Subject</label>
+                <input type="text" class="form-control" id="contactSubject" required>
+              </div>
+              <div class="mb-3">
+                <label for="contactMessage" class="form-label">Message</label>
+                <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-gradient w-100">Send Message</button>
+            </form>
+
+            <div class="social-links mt-4">
+              <h6>Follow us</h6>
+              <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact info + map -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 mb-4 reveal">
+            <h5><i class="fa-solid fa-location-dot me-2"></i>Office</h5>
+            <p class="text-secondary mb-1">ProxyPal HQ, Hinjawadi Phase 1</p>
+            <p class="text-secondary mb-1">Pune, Maharashtra 411057</p>
+            <p class="mb-0"><i class="fa-solid fa-phone me-2"></i>+91 1800-PROXY-PAL</p>
+            <p><i class="fa-solid fa-envelope me-2"></i>hello@proxypal.in</p>
+          </div>
+
+          <div class="map-embed reveal mb-4">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.265730862!2d73.7262!3d18.5912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf2e74f7c5c1%3A0x5f6a6f6f6f6f6f6f!2sHinjawadi%2C%20Pune!5e0!3m2!1sen!2sin!4v1"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="ProxyPal office location"></iframe>
+          </div>
+
+          <!-- FAQ -->
+          <div class="glass-card p-4 reveal" id="faq">
+            <h5 class="mb-3"><i class="fa-solid fa-circle-question me-2"></i>FAQ</h5>
+            <div class="accordion" id="faqAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">How does ProxyPal work?</button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">Post a task with location, time, and budget. A nearby verified ProxyPal accepts and completes it while you track progress live.</div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">Is it safe?</button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">All ProxyPals undergo ID verification. Payments are held until task completion. This demo uses localStorage only.</div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">How much does it cost?</button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">You set your own budget. Typical rates are ₹120–250/hour plus a 10% platform fee. Use our pricing calculator on the Hire page.</div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">Can I become a ProxyPal?</button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">Yes! Visit the Become a ProxyPal page, fill the registration form, and start earning on your schedule.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 mt-4 reveal">
+            <h6>Rate our support</h6>
+            <div class="rating-stars" id="serviceRating">
+              <i class="fa-solid fa-star" data-rating="1"></i>
+              <i class="fa-solid fa-star" data-rating="2"></i>
+              <i class="fa-solid fa-star" data-rating="3"></i>
+              <i class="fa-solid fa-star" data-rating="4"></i>
+              <i class="fa-solid fa-star" data-rating="5"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+  <div id="shared-components"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/contact.js"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hire a ProxyPal for queue standing, appointments, and local tasks. Post your task in minutes.">
+  <title>Hire a ProxyPal | ProxyPal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="hire">
+
+  <div class="loading-overlay" id="pageLoader">
+    <div class="text-center">
+      <div class="spinner-border text-light mb-3" role="status"></div>
+      <p class="text-white">Loading...</p>
+    </div>
+  </div>
+
+  <div id="navbar-container"></div>
+  <div id="liveNotificationArea"></div>
+
+  <header class="page-header">
+    <div class="container text-center">
+      <h1 class="display-5 fw-bold">Hire a <span class="text-gradient">ProxyPal</span></h1>
+      <p class="text-secondary lead">Tell us what you need — we'll match you with a verified helper nearby.</p>
+    </div>
+  </header>
+
+  <main class="form-page">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Hire Form -->
+        <div class="col-lg-8">
+          <div class="glass-card p-4 reveal">
+            <h4 class="mb-4"><i class="fa-solid fa-clipboard-list me-2"></i>Task Details</h4>
+            <form id="hireForm" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="fullName" class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="fullName" required placeholder="Your full name">
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label">Phone Number</label>
+                  <input type="tel" class="form-control" id="phone" required placeholder="+91 98765 43210">
+                </div>
+                <div class="col-md-6">
+                  <label for="taskType" class="form-label">Task Type</label>
+                  <select class="form-select" id="taskType" required>
+                    <option value="">Select task type</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="taskLocation" class="form-label">Task Location</label>
+                  <input type="text" class="form-control" id="taskLocation" list="locationList" required placeholder="Where the task needs to be done">
+                  <datalist id="locationList"></datalist>
+                </div>
+                <div class="col-md-6">
+                  <label for="clientLocation" class="form-label">Your Location</label>
+                  <input type="text" class="form-control" id="clientLocation" list="clientLocationList" required placeholder="Your current address">
+                  <datalist id="clientLocationList"></datalist>
+                </div>
+                <div class="col-md-6">
+                  <label for="dateTime" class="form-label">Date &amp; Time</label>
+                  <input type="datetime-local" class="form-control" id="dateTime" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="duration" class="form-label">Expected Duration</label>
+                  <select class="form-select" id="duration" required>
+                    <option value="">Select duration</option>
+                    <option value="1 hour">1 hour</option>
+                    <option value="2 hours">2 hours</option>
+                    <option value="3 hours">3 hours</option>
+                    <option value="4 hours">4 hours</option>
+                    <option value="5+ hours">5+ hours</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="budget" class="form-label">Budget (₹)</label>
+                  <input type="number" class="form-control" id="budget" min="100" step="50" required placeholder="500">
+                </div>
+                <div class="col-md-6">
+                  <label for="referenceImage" class="form-label">Reference Image (optional)</label>
+                  <input type="file" class="form-control" id="referenceImage" accept="image/*">
+                </div>
+                <div class="col-12">
+                  <label for="description" class="form-label">Task Description</label>
+                  <textarea class="form-control" id="description" rows="4" required placeholder="Describe what the ProxyPal needs to do..."></textarea>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-gradient btn-lg mt-4 w-100">
+                <i class="fa-solid fa-paper-plane me-2"></i>Submit Request
+              </button>
+            </form>
+          </div>
+
+          <!-- Task progress tracker -->
+          <div class="glass-card p-4 mt-4 reveal">
+            <h5 class="mb-3">Task Progress Preview</h5>
+            <div class="progress-tracker">
+              <div class="progress-step active"><div class="step-dot"><i class="fa-solid fa-file-alt"></i></div><small>Posted</small></div>
+              <div class="progress-step"><div class="step-dot"><i class="fa-solid fa-user-check"></i></div><small>Assigned</small></div>
+              <div class="progress-step"><div class="step-dot"><i class="fa-solid fa-spinner"></i></div><small>In Progress</small></div>
+              <div class="progress-step"><div class="step-dot"><i class="fa-solid fa-check"></i></div><small>Done</small></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing calculator sidebar -->
+        <div class="col-lg-4">
+          <div class="glass-card p-4 reveal sticky-top" style="top:90px;">
+            <h5 class="mb-3"><i class="fa-solid fa-calculator me-2"></i>Pricing Calculator</h5>
+            <p class="text-secondary small">Estimate cost based on hours and hourly rate.</p>
+            <div class="mb-3">
+              <label for="calcHours" class="form-label">Hours</label>
+              <input type="number" class="form-control" id="calcHours" min="1" max="12" value="2">
+            </div>
+            <div class="mb-3">
+              <label for="calcRate" class="form-label">Hourly Rate (₹)</label>
+              <input type="number" class="form-control" id="calcRate" min="50" step="10" value="150">
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between small"><span>Subtotal</span><span id="calcSubtotal">₹0</span></div>
+            <div class="d-flex justify-content-between small text-secondary"><span>Platform fee (10%)</span><span id="calcFee">₹0</span></div>
+            <div class="d-flex justify-content-between fw-bold mt-2"><span>Total</span><span class="pricing-result" id="calcTotal">₹0</span></div>
+          </div>
+
+          <div class="glass-card p-4 mt-4 reveal">
+            <h6>Rate your last experience</h6>
+            <div class="rating-stars" id="hireRating">
+              <i class="fa-solid fa-star" data-rating="1"></i>
+              <i class="fa-solid fa-star" data-rating="2"></i>
+              <i class="fa-solid fa-star" data-rating="3"></i>
+              <i class="fa-solid fa-star" data-rating="4"></i>
+              <i class="fa-solid fa-star" data-rating="5"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center p-4">
+        <div class="modal-body">
+          <i class="fa-solid fa-circle-check text-success display-4 mb-3"></i>
+          <h4>Request Submitted!</h4>
+          <p class="text-secondary">Your task has been saved. A ProxyPal will be matched shortly.</p>
+          <a href="dashboard.html" class="btn btn-gradient me-2">View Dashboard</a>
+          <button type="button" class="btn btn-outline-glass" data-bs-dismiss="modal">Post Another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+  <div id="shared-components"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/hire.js"></script>
+  <script>$(function(){ initRatingStars("#hireRating"); });</script>
+</body>
+</html>
