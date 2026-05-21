@@ -411,6 +411,22 @@ async function registerUser(name, email, password) {
   }
 }
 
+/** Update current user's avatar in localStorage */
+function updateUserAvatar(dataUrl) {
+  const user = getCurrentUser();
+  if (!user) return false;
+  user.avatar = dataUrl;
+  ProxyPalStorage.set(ProxyPalStorage.KEYS.CURRENT_USER, user);
+  // Also update in users list
+  const users = ProxyPalStorage.get(ProxyPalStorage.KEYS.USERS) || [];
+  const idx = users.findIndex((u) => u.email === user.email);
+  if (idx !== -1) {
+    users[idx].avatar = dataUrl;
+    ProxyPalStorage.set(ProxyPalStorage.KEYS.USERS, users);
+  }
+  return true;
+}
+
 /** Logout current user */
 function logoutUser() {
   ProxyPalAPI.logout();

@@ -619,6 +619,51 @@ h1, h2, h3, h4, h5 {
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--accent-light);
+  transition: transform 0.2s ease;
+}
+
+/* Avatar upload wrapper with hover overlay */
+.avatar-upload-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: #fff;
+  cursor: pointer;
+  gap: 2px;
+}
+
+.avatar-upload-overlay i {
+  font-size: 1.2rem;
+}
+
+.avatar-upload-overlay span {
+  font-size: 0.6rem;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.avatar-upload-wrapper:hover .avatar-upload-overlay {
+  opacity: 1;
+}
+
+.avatar-upload-wrapper:active .profile-avatar {
+  transform: scale(0.95);
 }
 
 .task-card-dashboard {

@@ -33,7 +33,14 @@
         <!-- Sidebar profile -->
         <div class="col-lg-3">
           <div class="glass-card p-4 text-center dashboard-sidebar reveal">
-            <img src="https://i.pravatar.cc/150?u=default" alt="Profile" class="profile-avatar mb-3" id="profileAvatar">
+            <div class="avatar-upload-wrapper mb-3">
+              <img src="https://i.pravatar.cc/150?u=default" alt="Profile" class="profile-avatar" id="profileAvatar">
+              <label for="avatarUpload" class="avatar-upload-overlay" title="Change profile photo">
+                <i class="fa-solid fa-camera"></i>
+                <span>Change Photo</span>
+              </label>
+              <input type="file" id="avatarUpload" accept="image/*" class="d-none">
+            </div>
             <h5 id="profileName">Demo User</h5>
             <p class="text-secondary small" id="profileEmail">demo@proxypal.in</p>
             <hr>

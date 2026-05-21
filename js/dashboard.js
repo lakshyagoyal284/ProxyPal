@@ -29,6 +29,9 @@ async function renderDashboard() {
     $("#profileAvatar").attr("src", user.avatar || "https://i.pravatar.cc/150?u=default");
   }
 
+  // Avatar upload handler
+  initAvatarUpload();
+
   const active = tasks.filter(function (t) {
     return t.status === "active" || t.status === "pending";
   });
@@ -99,6 +102,41 @@ function renderTaskList(selector, tasks, type) {
       "</div>";
   });
   $container.html(html);
+}
+
+/** Profile picture upload handler */
+function initAvatarUpload() {
+  // Unbind previous handler to avoid duplicates
+  $("#avatarUpload").off("change");
+
+  $("#avatarUpload").on("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      showToast("Image too large. Max 2MB allowed.", "error");
+      return;
+    }
+
+    readFileAsDataURL(file, function (dataUrl) {
+      if (!dataUrl) {
+        showToast("Failed to read image.", "error");
+        return;
+      }
+
+      // Update display immediately
+      $("#profileAvatar").attr("src", dataUrl);
+
+      // Save to user profile
+      const saved = updateUserAvatar(dataUrl);
+      if (saved) {
+        showToast("Profile photo updated! 🎉");
+      } else {
+        showToast("Could not save photo. Login first.", "error");
+      }
+    });
+  });
 }
 
 function updateProgressTracker(task) {
