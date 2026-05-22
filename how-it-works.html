@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="How ProxyPal works — Post a task, get matched, track progress, and pay. Watch the workflow video to see how it all comes together.">
+  <meta name="keywords" content="ProxyPal, how it works, task workflow, queue standing, hire proxy, how to use ProxyPal">
+  <meta name="author" content="ProxyPal">
+  <meta property="og:title" content="How ProxyPal Works — Save Your Waiting Time">
+  <meta property="og:description" content="India's on-demand platform for queue standing, appointments, and local time-based tasks. See the full workflow in action.">
+  <title>How It Works | ProxyPal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* How It Works page specific styles */
+    .workflow-video-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.25);
+      border: 2px solid var(--glass-border);
+      background: #000;
+    }
+
+    .workflow-video-wrapper video {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 70vh;
+      object-fit: contain;
+      background: #0a0a0a;
+    }
+
+
+    .how-step-card {
+      padding: 2rem;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .how-step-card .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--gradient);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+    }
+
+    .how-step-card .step-icon {
+      font-size: 1.8rem;
+      color: var(--accent-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .how-step-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .how-step-card:hover::before {
+      opacity: 1;
+    }
+
+    .why-section .why-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--accent-light);
+      flex-shrink: 0;
+    }
+
+    .cta-section {
+      background: var(--gradient-soft);
+      border-radius: 20px;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    @media (max-width: 576px) {
+      .workflow-video-wrapper .play-overlay .play-btn-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body data-page="how-it-works">
+
+  <div class="loading-overlay" id="pageLoader">
+    <div class="text-center">
+      <div class="spinner-border text-light mb-3" role="status"></div>
+      <p class="text-white">Loading...</p>
+    </div>
+  </div>
+
+  <div id="navbar-container"></div>
+  <div id="liveNotificationArea"></div>
+
+  <header class="page-header">
+    <div class="container text-center">
+      <span class="badge rounded-pill mb-3 px-3 py-2" style="background:var(--glass-bg);border:1px solid var(--glass-border);">
+        <i class="fa-solid fa-play text-warning me-1"></i> Learn the workflow
+      </span>
+      <h1 class="display-5 fw-bold">How <span class="text-gradient">ProxyPal</span> Works</h1>
+      <p class="text-secondary lead">From posting a task to getting it done — here's everything you need to know</p>
+    </div>
+  </header>
+
+  <main class="form-page pt-0">
+    <div class="container">
+
+      <!-- Video Section -->
+      <section class="section-padding pb-2">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 reveal">
+            <div class="workflow-video-wrapper">
+              <video id="workflowVideo" preload="metadata" playsinline controls>
+                <source src="Video/f_b_b_a_a_ca_b_ProxyPal_P_P_Workflowmp_.mp4" type="video/mp4">
+                Your browser does not support the video tag. Please download the video to view it.
+              </video>
+            </div>
+            <p class="text-secondary text-center mt-3 small">
+              <i class="fa-solid fa-circle-info me-1"></i> Watch the full ProxyPal workflow — from posting a task to completed handoff.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Description Section -->
+      <section class="section-padding pb-2">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center reveal">
+            <h2 class="section-title mb-3">Your Time Is <span class="text-gradient">Valuable</span></h2>
+            <p class="lead text-secondary">
+              ProxyPal connects you with verified, nearby helpers who can stand in queues, 
+              handle government office visits, wait for deliveries, or manage any local task 
+              that eats up your precious time. Simply post what you need done, set a budget, 
+              and let a ProxyPal take over — while you stay focused on what matters.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Detailed Steps -->
+      <section class="section-padding">
+        <div class="text-center section-title reveal">
+          <h2>The Full <span class="text-gradient">Workflow</span></h2>
+          <p class="text-secondary">Four simple steps to reclaim your day</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6 reveal">
+            <div class="glass-card how-step-card">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="step-badge">1</div>
+                <div>
+                  <h5 class="mb-0">Post Your Task</h5>
+                  <small class="text-secondary">Tell us what you need</small>
+                </div>
+              </div>
+              <p class="text-secondary mb-0">
+                Describe the task — whether it's standing in a queue at the passport office, 
+                waiting for a delivery at home, or submitting forms at a government department. 
+                Tell us the location, preferred date & time, duration, and your budget. 
+                It takes less than 2 minutes to post.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6 reveal">
+            <div class="glass-card how-step-card">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="step-badge">2</div>
+                <div>
+                  <h5 class="mb-0">Get Matched</h5>
+                  <small class="text-secondary">A ProxyPal accepts your task</small>
+                </div>
+              </div>
+              <p class="text-secondary mb-0">
+                Nearby verified ProxyPals see your task and can accept it within minutes. 
+                Each ProxyPal has an ID-verified profile with ratings and reviews from 
+                previous clients. You can see who's available and pick the best match, 
+                or let the system match you automatically.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6 reveal">
+            <div class="glass-card how-step-card">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="step-badge">3</div>
+                <div>
+                  <h5 class="mb-0">Track Progress</h5>
+                  <small class="text-secondary">Live updates in real time</small>
+                </div>
+              </div>
+              <p class="text-secondary mb-0">
+                Once your ProxyPal starts working, you get live updates — check-in, 
+                progress milestones, photos, and real-time chat. You can see exactly 
+                where they are in the queue, how much longer it will take, and 
+                communicate directly if anything changes.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6 reveal">
+            <div class="glass-card how-step-card">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="step-badge">4</div>
+                <div>
+                  <h5 class="mb-0">Pay & Rate</h5>
+                  <small class="text-secondary">Release payment & review</small>
+                </div>
+              </div>
+              <p class="text-secondary mb-0">
+                After the task is completed, review the work and release payment. 
+                Your payment is held securely until you're satisfied. Then rate your 
+                ProxyPal and leave a review to help the community. Earn rewards for 
+                frequent usage and referrals!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why ProxyPal -->
+      <section class="section-padding py-4">
+        <div class="glass-card p-5 reveal">
+          <div class="text-center mb-5">
+            <h2>Why Thousands Trust <span class="text-gradient">ProxyPal</span></h2>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-6 why-section">
+              <div class="d-flex gap-3 align-items-start mb-4">
+                <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                  <h6>Verified & Trusted</h6>
+                  <p class="text-secondary small mb-0">Every ProxyPal undergoes ID verification. Your task is in safe hands with rated, reviewed helpers.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 why-section">
+              <div class="d-flex gap-3 align-items-start mb-4">
+                <div class="why-icon"><i class="fa-solid fa-clock"></i></div>
+                <div>
+                  <h6>Save 3–6 Hours Per Task</h6>
+                  <p class="text-secondary small mb-0">Reclaim your day. While your ProxyPal handles the wait, you work, relax, or spend time with family.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 why-section">
+              <div class="d-flex gap-3 align-items-start mb-4">
+                <div class="why-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                <div>
+                  <h6>Transparent Pricing</h6>
+                  <p class="text-secondary small mb-0">Set your budget upfront. No hidden fees, no surprises. You decide what the task is worth.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 why-section">
+              <div class="d-flex gap-3 align-items-start mb-4">
+                <div class="why-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                <div>
+                  <h6>Live Tracking & Chat</h6>
+                  <p class="text-secondary small mb-0">Follow every step in real time with progress updates, photos, and direct messaging with your ProxyPal.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section-padding py-4">
+        <div class="cta-section reveal">
+          <h2 class="mb-3">Ready to Get Started?</h2>
+          <p class="mb-4 text-white opacity-75">Join thousands who've already reclaimed their time.</p>
+          <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="hire.html" class="btn btn-light btn-lg px-4 fw-bold">
+              <i class="fa-solid fa-user-plus me-2"></i>Hire a ProxyPal
+            </a>
+            <a href="become.html" class="btn btn-outline-light btn-lg px-4 fw-bold">
+              <i class="fa-solid fa-briefcase me-2"></i>Become a ProxyPal
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+  <div id="shared-components"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+</body>
+</html>

@@ -149,6 +149,7 @@ function renderFooter() {
             <h6 class="text-white mb-3">Quick Links</h6>
             <ul class="list-unstyled">
               <li><a href="index.html">Home</a></li>
+              <li><a href="how-it-works.html">How It Works</a></li>
               <li><a href="hire.html">Hire ProxyPal</a></li>
               <li><a href="become.html">Become ProxyPal</a></li>
               <li><a href="tasks.html">Task Board</a></li>
