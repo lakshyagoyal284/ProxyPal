@@ -367,7 +367,7 @@ async function loginUser(email, password) {
         name: email.split("@")[0],
         email: email,
         role: "client",
-        avatar: "https://i.pravatar.cc/150?u=" + encodeURIComponent(email),
+        avatar: "images/Lakshya.png",
         joinedAt: new Date().toISOString()
       };
       users.push(user);
@@ -400,7 +400,7 @@ async function registerUser(name, email, password) {
       name: name,
       email: email.toLowerCase(),
       role: "client",
-      avatar: "https://i.pravatar.cc/150?u=" + encodeURIComponent(email),
+      avatar: "images/Lakshya.png",
       joinedAt: new Date().toISOString()
     };
     const users = ProxyPalStorage.get(ProxyPalStorage.KEYS.USERS) || [];

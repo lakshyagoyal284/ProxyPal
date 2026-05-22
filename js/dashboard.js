@@ -26,7 +26,7 @@ async function renderDashboard() {
   if (user) {
     $("#profileName").text(user.name);
     $("#profileEmail").text(user.email || "demo@proxypal.in");
-    $("#profileAvatar").attr("src", user.avatar || "https://i.pravatar.cc/150?u=default");
+    $("#profileAvatar").attr("src", user.avatar || "images/Lakshya.png");
   }
 
   // Avatar upload handler

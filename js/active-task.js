@@ -85,13 +85,13 @@ function loadTaskData(task) {
   $("#clientName").text(task.fullName);
   $("#clientAvatar").attr(
     "src",
-    "https://i.pravatar.cc/150?u=" + encodeURIComponent(task.fullName + "_client")
+    "images/Lakshya.png"
   );
   $("#clientPhone").text(task.phone);
   $("#chatClientName").text(task.fullName.split(" ")[0]);
   $("#chatClientAvatar").attr(
     "src",
-    "https://i.pravatar.cc/150?u=" + encodeURIComponent(task.fullName + "_client")
+    "images/Lakshya.png"
   );
 
   // Task details

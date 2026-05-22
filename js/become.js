@@ -60,7 +60,7 @@ function initBecomeForm() {
 }
 
 function renderProfilePreview(worker) {
-  const avatarUrl = "https://i.pravatar.cc/150?u=" + encodeURIComponent(worker.name);
+  const avatarUrl = "images/Lakshya.png";
   const stars = Math.round(worker.rating || 5);
   let starsHtml = "";
   for (let i = 1; i <= 5; i++) {

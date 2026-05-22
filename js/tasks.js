@@ -29,7 +29,7 @@ async function initTaskBoard() {
     $("#workerStripRate").text(worker.hourlyRate);
     $("#workerStripAvatar").attr(
       "src",
-      "https://i.pravatar.cc/150?u=" + encodeURIComponent(worker.name)
+      "images/Lakshya.png"
     );
     $("#registerLinkBtn").addClass("d-none");
     await updateMyAcceptedCount(worker);

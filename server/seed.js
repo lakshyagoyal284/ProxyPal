@@ -17,7 +17,7 @@ async function seedDatabase() {
     const hashed = await bcrypt.hash("demo1234", 10);
     await client.query(
       `INSERT INTO users (id, name, email, phone, password, role, avatar, joined_at) VALUES
-       ('pp_user_demo', 'Demo User', 'demo@proxypal.in', '+91 90000 12345', $1, 'client', 'https://i.pravatar.cc/150?u=demo', '2026-01-01T00:00:00Z')`,
+       ('pp_user_demo', 'Demo User', 'demo@proxypal.in', '+91 90000 12345', $1, 'client', '/images/Lakshya.png', '2026-01-01T00:00:00Z')`,
       [hashed]
     );
 

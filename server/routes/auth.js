@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
       email: email.toLowerCase(),
       phone: "",
       role: "client",
-      avatar: "https://i.pravatar.cc/150?u=" + encodeURIComponent(email),
+      avatar: "/images/Lakshya.png",
       joined_at: new Date().toISOString(),
     };
 
